@@ -1,0 +1,31 @@
+#include "DHT.h"
+
+#define DHTPIN 2        // Digital pin connected to the DHT sensor
+#define DHTTYPE DHT11   // DHT 11 sensor; change to DHT22 if needed
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+
+  // Optional: Print header for Serial Plotter
+  Serial.println("Temperature\tHumidity");
+}
+
+void loop() {
+  delay(2000);  // Wait 2 seconds between measurements
+
+  float humidity = dht.readHumidity();
+  float temperature = dht.readTemperature(); // Celsius by default
+
+  if (isnan(humidity) || isnan(temperature)) {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+
+  // Output data in a format readable by Serial Plotter
+  Serial.print(temperature);
+  Serial.print("\t");
+  Serial.println(humidity);
+}
