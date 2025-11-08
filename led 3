@@ -1,0 +1,20 @@
+int led1 = 8;
+int led2 = 9;
+
+void setup() {
+  // Set both pins as output
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+}
+
+void loop() {
+  // Turn LED1 ON, LED2 OFF
+  digitalWrite(led1, HIGH);
+  digitalWrite(led2, LOW);
+  delay(500);  // wait 500 milliseconds
+
+  // Turn LED1 OFF, LED2 ON
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, HIGH);
+  delay(500);  // wait 500 milliseconds
+}
