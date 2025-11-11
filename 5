@@ -1,0 +1,47 @@
+DELIMITER //
+
+-- Stored Procedure: Factorial with control structure and error handling
+CREATE PROCEDURE proc_factorial(IN input_num INT)
+BEGIN
+    DECLARE v_factorial BIGINT DEFAULT 1;
+    DECLARE i INT DEFAULT 1;
+
+    IF input_num < 0 THEN
+        SELECT CONCAT('Error: Number ', input_num, ' is negative. Factorial not defined.') AS Result;
+    ELSE
+        WHILE i <= input_num DO
+            SET v_factorial = v_factorial * i;
+            SET i = i + 1;
+        END WHILE;
+        SELECT CONCAT('Factorial of ', input_num, ' = ', v_factorial) AS Result;
+    END IF;
+END;
+//
+
+-- Stored Function: Factorial
+CREATE FUNCTION func_factorial(input_num INT) 
+RETURNS BIGINT
+DETERMINISTIC
+BEGIN
+    DECLARE v_factorial BIGINT DEFAULT 1;
+    DECLARE i INT DEFAULT 1;
+
+    IF input_num < 0 THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Error: Number must be non-negative.';
+    ELSE
+        WHILE i <= input_num DO
+            SET v_factorial = v_factorial * i;
+            SET i = i + 1;
+        END WHILE;
+    END IF;
+
+    RETURN v_factorial;
+END;
+//
+
+DELIMITER ;
+
+-- Example calls
+CALL proc_factorial(5);
+SELECT func_factorial(6) AS FactorialResult;
