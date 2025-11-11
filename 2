@@ -1,0 +1,56 @@
+CREATE DATABASE IF NOT EXISTS CollegeDB;
+USE CollegeDB;
+
+DROP TABLE IF EXISTS Students;
+CREATE TABLE Students (
+    student_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(30) NOT NULL,
+    marks INT CHECK (marks BETWEEN 0 AND 100),
+    email VARCHAR(50) UNIQUE
+);
+
+INSERT INTO Students (name, marks, email) VALUES
+('Amit', 85, 'amit@gmail.com'),
+('Riya', 92, 'riya@gmail.com'),
+('Raj', 76, 'raj@gmail.com'),
+('Sneha', 88, 'sneha@gmail.com');
+
+INSERT INTO Students (name, marks, email)
+VALUES ('Arjun', 81, 'arjun@gmail.com');
+
+SELECT * FROM Students;
+
+SELECT name, marks 
+FROM Students
+WHERE marks > 80;
+
+SELECT name, email 
+FROM Students
+WHERE name LIKE 'R%';
+
+UPDATE Students
+SET marks = 95
+WHERE name = 'Amit';
+
+DELETE FROM Students
+WHERE name = 'Raj';
+
+SELECT AVG(marks) AS Avg_Marks
+FROM Students;
+
+SELECT name, marks
+FROM Students
+WHERE marks >= 80 AND name LIKE '%a';
+
+SELECT name, marks
+FROM Students
+ORDER BY marks DESC
+LIMIT 2;
+
+SELECT name, marks
+FROM Students
+WHERE marks >= 90
+UNION
+SELECT name, marks
+FROM Students
+WHERE name LIKE 'S%';
