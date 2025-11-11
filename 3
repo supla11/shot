@@ -1,0 +1,49 @@
+CREATE DATABASE SchoolDB;
+USE SchoolDB;
+
+CREATE TABLE Students(id INT, name VARCHAR(30));
+CREATE TABLE Marks(id INT, subject VARCHAR(30), marks INT);
+
+INSERT INTO Students VALUES (1,'Amit'),(2,'Riya'),(3,'Raj');
+INSERT INTO Marks VALUES (1,'Math',85),(2,'Math',75),(3,'Math',90);
+
+-- 1. Display all student details
+SELECT * FROM Students;
+
+-- 2. INNER JOIN – show student names with marks
+SELECT s.name, m.subject, m.marks
+FROM Students s
+JOIN Marks m ON s.id = m.id;
+
+-- 3. LEFT JOIN – show all students even if no marks
+SELECT s.name, m.marks
+FROM Students s
+LEFT JOIN Marks m ON s.id = m.id;
+
+-- 4. RIGHT JOIN – show all marks even if student missing
+SELECT s.name, m.marks
+FROM Students s
+RIGHT JOIN Marks m ON s.id = m.id;
+
+-- 5. CROSS JOIN – all possible combinations
+SELECT s.name, m.subject FROM Students s CROSS JOIN Marks m;
+
+-- 6. SUBQUERY – students scoring above average
+SELECT name FROM Students
+WHERE id IN (SELECT id FROM Marks WHERE marks > (SELECT AVG(marks) FROM Marks));
+
+-- 7. SUBQUERY – find highest marks student
+SELECT name FROM Students
+WHERE id = (SELECT id FROM Marks WHERE marks = (SELECT MAX(marks) FROM Marks));
+
+-- 8. CREATE VIEW – student marks view
+CREATE VIEW StudentMarks AS
+SELECT s.name, m.subject, m.marks
+FROM Students s JOIN Marks m ON s.id = m.id;
+
+-- 9. SELECT from view
+SELECT * FROM StudentMarks;
+
+-- 10. UPDATE and DELETE example
+UPDATE Marks SET marks = 95 WHERE id = 2;
+DELETE FROM Marks WHERE id = 3;
