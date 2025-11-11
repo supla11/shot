@@ -1,0 +1,28 @@
+DELIMITER //
+
+CREATE PROCEDURE factorial_calc(IN input_num INT)
+BEGIN
+    DECLARE v_factorial BIGINT DEFAULT 1;
+    DECLARE i INT DEFAULT 1;
+
+    -- Error handling for negative input
+    IF input_num < 0 THEN
+        SELECT CONCAT('Error: Number ', input_num, ' is negative. Factorial not defined.') AS Result;
+    ELSE
+        -- Loop to calculate factorial
+        WHILE i <= input_num DO
+            SET v_factorial = v_factorial * i;
+            SET i = i + 1;
+        END WHILE;
+        -- Display result
+        SELECT CONCAT('Factorial of ', input_num, ' = ', v_factorial) AS Result;
+    END IF;
+
+END;
+//
+
+DELIMITER ;
+
+-- Example calls
+CALL factorial_calc(10);
+CALL factorial_calc(-5);
