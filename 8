@@ -1,0 +1,38 @@
+use SchoolDB
+
+
+db.Students.insertMany([
+  { _id: 1, name: "Amit", age: 20, marks: 80, city: "Mumbai" },
+  { _id: 2, name: "Riya", age: 22, marks: 92, city: "Delhi" },
+  { _id: 3, name: "Raj", age: 21, marks: 76, city: "Mumbai" },
+  { _id: 4, name: "Sneha", age: 23, marks: 88, city: "Bangalore" }
+])
+
+print("All students:")
+db.Students.find().forEach(printjson)
+
+print("Students with marks > 80:")
+db.Students.find({ marks: { $gt: 80 } }).forEach(printjson)
+
+print("Students from Mumbai OR marks > 90:")
+db.Students.find({ $or: [{ city: "Mumbai" }, { marks: { $gt: 90 } }] }).forEach(printjson)
+
+db.Students.updateOne({ _id: 1 }, { $set: { marks: 85 } })
+db.Students.updateMany({ city: "Mumbai" }, { $inc: { marks: 5 } })
+db.Students.updateOne({ _id: 2 }, { $set: { name: "Riya", age: 22, marks: 95, city: "Delhi" } }, { upsert: true })
+db.Students.updateOne({ _id: 5 }, { $set: { name: "Neha", age: 20, marks: 78, city: "Pune" } }, { upsert: true })
+
+print("Students after updates:")
+db.Students.find().forEach(printjson)
+
+db.Students.deleteOne({ _id: 3 })
+db.Students.deleteMany({ marks: { $lt: 80 } })
+
+print("Students after deletion:")
+db.Students.find().forEach(printjson)
+
+print("Students sorted by marks descending:")
+db.Students.find().sort({ marks: -1 }).forEach(printjson)
+
+print("Only name and marks of students:")
+db.Students.find({}, { name: 1, marks: 1, _id: 0 }).forEach(printjson)
