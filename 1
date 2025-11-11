@@ -1,0 +1,30 @@
+CREATE DATABASE IF NOT EXISTS CollegeDB;
+USE CollegeDB;
+
+DROP TABLE IF EXISTS Students;
+CREATE TABLE Students (
+    student_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(30) NOT NULL,
+    marks INT CHECK (marks BETWEEN 0 AND 100),
+    email VARCHAR(50) UNIQUE
+);
+
+INSERT INTO Students (name, marks, email) VALUES
+('Amit', 85, 'amit@gmail.com'),
+('Riya', 92, 'riya@gmail.com'),
+('Raj', 76, 'raj@gmail.com');
+
+-- Create an Index on name column
+CREATE INDEX idx_name ON Students(name);
+
+-- Create a View to show limited columns
+CREATE VIEW student_view AS
+SELECT name, marks FROM Students;
+
+-- MySQL does not support SYNONYM, but you can use a VIEW as an alternative
+CREATE VIEW stu AS
+SELECT * FROM Students;
+
+-- Display data using View and “synonym”
+SELECT * FROM student_view;
+SELECT * FROM stu;
