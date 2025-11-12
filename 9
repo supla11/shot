@@ -1,0 +1,50 @@
+use p9;
+
+// --- Data Setup ---
+db.createCollection('website');
+
+db.website.insert({'roll':'1', 'name': 'harsh','amount':1000,'ur':'www.yahoo.com'});
+db.website.insert({'roll':'2', 'name': 'jitesh','amount':2000,'url':'www.yahoo.com'});
+db.website.insert({'roll':'3', 'name':'rina','amount':3000,'url':'www.google.com'});
+db.website.insert({'roll':'4','name':'ash','amount':4000,'url':'www.gmail.com'});
+db.website.insert({'roll':'5', 'name':'ash','amount':1000,'url':'www.pvg.com'});
+
+// --- Aggregation Operations ---
+db.website.aggregate({$group:{_id:"$name","total":{$sum:"$amount"}}});
+db.website.aggregate({$group:{_id:"$name","total":{$avg:"$amount"}}});
+db.website.aggregate({$group:{_id:"$name","total":{$min:"$amount"}}});
+db.website.aggregate({$group:{_id:"$name","total":{$max:"$amount"}}});
+db.website.aggregate({$group:{_id:"$name","total":{$first:"$amount"}}});
+db.website.aggregate({$group:{_id:"$name","total":{$last:"$amount"}}});
+db.website.aggregate({$group:{_id:"$name","total":{$push:"$amount"}}});
+db.website.aggregate({$group:{_id:"$name","total": {$sum:1}}});
+db.website.aggregate({$group:{_id:"$name","total":{$addToSet:"$amount"}}});
+
+// --- Indexing Operations ---
+db.createCollection('website1');
+db.website1.insert({'r':1, 'name': 'harsh'});
+db.website1.find().pretty();
+
+db.website1.createIndex({'name':1});
+db.website1.createIndex({'name':-1});
+// Note: db.website1.getIndexses() is a typo and will produce an error, 
+// but it is included to match the original document flow.
+db.website1.getIndexses(); 
+db.website1.getIndexes();
+
+db.website1.createIndex({'name':-1});
+db.website.dropIndex({'name':-1}); // Note: This drops an index from 'website', not 'website1'
+db.website1.dropIndex({'name':1});
+db.website1.dropIndex({'name':1}); // This will likely fail as the index was already dropped
+
+db.website1.getIndexes();
+db.website1.find().pretty();
+
+db.website1.createIndex({'name':1});
+db.website1.getIndexes();
+
+db.website1.dropIndex({'name':1});
+db.website1.getIndexes();
+
+db.website1.createIndex({'name':1,'r':-1});
+db.website1.getIndexes();
