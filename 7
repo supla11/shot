@@ -1,0 +1,75 @@
+CREATE DATABASE p7;
+USE p7;
+
+CREATE TABLE borrower1 (
+    roll_no INT,
+    name VARCHAR(50),	
+    date_of_issue DATE,
+    book_name VARCHAR(100),
+    status VARCHAR(50),
+    author VARCHAR(50),
+    PRIMARY KEY (roll_no)
+);
+
+CREATE TABLE Library_Audit (
+    roll_no INT,
+    name VARCHAR(50),
+    date_of_issue DATE,
+    book_name VARCHAR(100),
+    status VARCHAR(50),
+    author VARCHAR(50),
+    change_type VARCHAR(10),
+    change_timestamp TIMESTAMP
+);
+
+INSERT INTO borrower1 VALUES (1, 'nick', '2018-06-10', 'wings_of_fire', 'avaliable', 'APJ');
+INSERT INTO borrower1 VALUES (2, 'mira', '2018-05-11', 'leaves_life', 'not_avaliable', 'borwarkar');
+INSERT INTO borrower1 VALUES (3, 'rina', '2018-02-12', 'unusal', 'avaliable', 'johar');
+INSERT INTO borrower1 VALUES (4, 'harsha', '2018-06-20', 'skylimit', 'avaliable', 'ingale');
+INSERT INTO borrower1 VALUES (5, 'tej', '2018-04-20', 'highway', 'not_avaliable', 'klm');
+INSERT INTO borrower1 VALUES (6, 'xyz', '2018-09-06', 'aaa', 'avaliable', 'xxx');
+
+SELECT '* Initial Data in borrower1 (Library) *';
+SELECT * FROM borrower1;
+
+DELIMITER //
+
+CREATE TRIGGER borrower1_before_update
+BEFORE UPDATE ON borrower1
+FOR EACH ROW
+BEGIN
+    INSERT INTO Library_Audit (roll_no, name, date_of_issue, book_name, status, author, change_type, change_timestamp)
+    VALUES (OLD.roll_no, OLD.name, OLD.date_of_issue, OLD.book_name, OLD.status, OLD.author, 'UPDATE', CURRENT_TIMESTAMP());
+END;//
+
+CREATE TRIGGER borrower1_after_delete
+AFTER DELETE ON borrower1
+FOR EACH ROW
+BEGIN
+    INSERT INTO Library_Audit (roll_no, name, date_of_issue, book_name, status, author, change_type, change_timestamp)
+    VALUES (OLD.roll_no, OLD.name, OLD.date_of_issue, OLD.book_name, OLD.status, OLD.author, 'DELETE', CURRENT_TIMESTAMP());
+END;//
+
+CREATE TRIGGER borrower1_after_insert
+AFTER INSERT ON borrower1
+FOR EACH ROW
+BEGIN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'New record inserted successfully. (Trigger executed)';
+END;//
+
+DELIMITER ;
+
+SELECT '* Testing UPDATE: Updating record with name=xyz to roll_no=8 and book_name=leaf *';
+UPDATE borrower1 SET roll_no = 8, book_name = 'leaf' WHERE name = 'xyz';
+SELECT * FROM borrower1 WHERE name = 'xyz';
+
+SELECT '* Testing DELETE: Deleting record with roll_no=5 *';
+DELETE FROM borrower1 WHERE roll_no = 5;
+SELECT * FROM borrower1;
+
+SELECT '* Testing INSERT: Inserting a new record *';
+INSERT INTO borrower1 VALUES (7, 'new_user', '2025-11-10', 'test_book', 'avaliable', 'test_author');
+SELECT * FROM borrower1 WHERE roll_no = 7;
+
+SELECT '* Final content of Library_Audit table (Should contain old values for UPDATE (roll_no=6) and DELETE (roll_no=5)) *';
+SELECT * FROM Library_Audit;
