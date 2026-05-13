@@ -1,35 +1,30 @@
-# ===== 🔹 Cell 1 : Imports & Load Dataset =====
-import seaborn as sns
+import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
+# Load Titanic dataset
 titanic = sns.load_dataset('titanic')
 
-# View first 5 rows
+# Display dataset
 print(titanic.head())
 
-# ===== 🔹 Cell 2 : Survival Count =====
-sns.countplot(x='survived', data=titanic)
-plt.title("Survival Count")
-plt.show()
+# Dataset info
+print(titanic.info())
 
-# ===== 🔹 Cell 3 : Survival by Gender =====
-sns.countplot(x='sex', hue='survived', data=titanic)
-plt.title("Survival by Gender")
-plt.show()
+# Missing values
+print(titanic.isnull().sum())
 
-# ===== 🔹 Cell 4 : Survival by Passenger Class =====
-sns.countplot(x='pclass', hue='survived', data=titanic)
-plt.title("Survival by Passenger Class")
-plt.show()
+# Histogram of fare distribution
+plt.figure(figsize=(10,6))
 
-# ===== 🔹 Cell 5 : Age Distribution =====
-sns.histplot(titanic['age'], bins=30, kde=True)
-plt.title("Age Distribution")
-plt.show()
+sns.histplot(
+    titanic['fare'],
+    bins=30,
+    kde=True
+)
 
-# ===== 🔹 Cell 6 : Fare Distribution =====
-sns.histplot(titanic['fare'], bins=30, kde=True)
-plt.title("Fare Distribution")
+plt.title("Distribution of Titanic Ticket Fare")
 plt.xlabel("Fare")
-plt.ylabel("Count")
+plt.ylabel("Number of Passengers")
+
 plt.show()
