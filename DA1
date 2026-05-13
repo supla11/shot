@@ -1,0 +1,43 @@
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+...
+
+
+df = pd.read_csv('DSBDA_sample_file.csv', encoding='latin1')
+
+df.head()
+...
+
+print(df.isnull().sum())
+
+print(df.describe())
+
+print("Rows:", df.shape[0])
+print("Columns:", df.shape[1])
+...
+columns_to_convert = ['Survived', 'Pclass', 'Sex', 'Embarked']
+
+for col in columns_to_convert:
+    if col in df.columns:
+        df[col] = df[col].astype('category')
+    else:
+        print(f"Column '{col}' not found, skipping conversion.")
+
+print(df.dtypes)
+...
+columns_to_encode = ['Sex', 'Embarked', 'Pclass']
+
+existing_columns = [col for col in columns_to_encode if col in df.columns]
+
+if existing_columns:
+    df_encoded = pd.get_dummies(df, columns=existing_columns)
+    print(f"Encoded columns: {existing_columns}")
+else:
+    df_encoded = df.copy()
+    print("None of the requested columns were found. Returned a copy of original dataframe.")
+
+df_encoded.head()
+...

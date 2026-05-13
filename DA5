@@ -1,0 +1,59 @@
+# ===== 🔹 Cell 1 : Imports =====
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# ===== 🔹 Cell 2 : Load Dataset =====
+df = pd.read_csv('Social_network.csv')
+df.head()
+
+# ===== 🔹 Cell 3 : Split Features & Target =====
+X = df.iloc[:, [2, 3]].values
+y = df.iloc[:, 4].values
+
+# ===== 🔹 Cell 4 : Train Test Split & Scaling =====
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=0
+)
+
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+
+# ===== 🔹 Cell 5 : Train Logistic Regression =====
+from sklearn.linear_model import LogisticRegression
+
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# ===== 🔹 Cell 6 : Prediction =====
+y_pred = model.predict(X_test)
+print("Predicted:", y_pred[:10])
+print("Actual:", y_test[:10])
+
+# ===== 🔹 Cell 7 : Confusion Matrix Heatmap =====
+from sklearn.metrics import confusion_matrix
+
+cm = confusion_matrix(y_test, y_pred)
+sns.heatmap(cm, annot=True, fmt='d')
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted Label")
+plt.ylabel("Actual Label")
+plt.show()
+
+# ===== 🔹 Cell 8 : Metrics =====
+TN, FP, FN, TP = cm.ravel()
+
+accuracy = (TP + TN) / (TP + TN + FP + FN)
+error_rate = (FP + FN) / (TP + TN + FP + FN)
+precision = TP / (TP + FP)
+recall = TP / (TP + FN)
+
+print("Accuracy:", accuracy)
+print("Error Rate:", error_rate)
+print("Precision:", precision)
+print("Recall:", recall)

@@ -1,0 +1,45 @@
+# ===== 🔹 Cell 1 : Imports =====
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# ===== 🔹 Cell 2 : Load Dataset =====
+data = pd.read_csv("Iris.csv")
+
+X = data.drop(["Id", "Species"], axis=1)
+y = data["Species"]
+
+# ===== 🔹 Cell 3 : Train Test Split =====
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=0
+)
+
+# ===== 🔹 Cell 4 : Train Naive Bayes =====
+model = GaussianNB()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+print("Predictions:\n", y_pred)
+
+# ===== 🔹 Cell 5 : Confusion Matrix & Accuracy =====
+cm = confusion_matrix(y_test, y_pred)
+print("Confusion Matrix:\n", cm)
+
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+print("Error Rate:", 1 - accuracy)
+
+print("\nClassification Report:\n")
+print(classification_report(y_test, y_pred))
+
+# ===== 🔹 Cell 6 : Heatmap =====
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+            xticklabels=model.classes_,
+            yticklabels=model.classes_)
+plt.xlabel('Predicted Labels')
+plt.ylabel('True Labels')
+plt.title('Confusion Matrix: Iris Species Prediction')
+plt.show()

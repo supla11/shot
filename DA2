@@ -1,0 +1,61 @@
+# ===== 🔹 Cell 1 : Imports =====
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+# ===== 🔹 Cell 2 : Create Dataset =====
+np.random.seed(42)
+
+data = {
+    'Student_ID': range(1, 51),
+    'Gender': np.random.choice(['Male', 'Female'], 50),
+    'Math_Score': np.clip(np.random.normal(70, 15, 50), 0, 100),
+    'Science_Score': np.clip(np.random.normal(65, 12, 50), 0, 100),
+    'English_Score': np.clip(np.random.normal(75, 10, 50), 0, 100),
+    'Attendance_Percentage': np.clip(np.random.normal(85, 8, 50), 0, 100),
+    'Study_Hours_per_Week': np.clip(np.random.normal(15, 5, 50), 0, None),
+}
+
+df = pd.DataFrame(data)
+df.head()
+
+# ===== 🔹 Cell 3 : Introduce Missing & Wrong Values =====
+df.loc[5, 'Math_Score'] = np.nan
+df.loc[10, 'Science_Score'] = np.nan
+df.loc[15, 'Attendance_Percentage'] = np.nan
+df.loc[20, 'Gender'] = 'male'   # inconsistency
+df.loc[25, 'Math_Score'] = 200  # outlier
+
+# ===== 🔹 Cell 4 : Check Missing Values =====
+print(df.isnull().sum())
+
+# ===== 🔹 Cell 5 : Handle Missing Values =====
+df['Math_Score'] = df['Math_Score'].fillna(df['Math_Score'].mean())
+df['Science_Score'] = df['Science_Score'].fillna(df['Science_Score'].mean())
+df['Attendance_Percentage'] = df['Attendance_Percentage'].fillna(df['Attendance_Percentage'].mean())
+
+# ===== 🔹 Cell 6 : Fix Categorical Inconsistency =====
+df['Gender'] = df['Gender'].str.capitalize()
+
+# ===== 🔹 Cell 7 : Detect Outliers using IQR =====
+Q1 = df['Math_Score'].quantile(0.25)
+Q3 = df['Math_Score'].quantile(0.75)
+IQR = Q3 - Q1
+
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+df['Math_Score'] = np.where(df['Math_Score'] > upper_bound, upper_bound, df['Math_Score'])
+df['Math_Score'] = np.where(df['Math_Score'] < lower_bound, lower_bound, df['Math_Score'])
+
+# ===== 🔹 Cell 8 : Skewness & Log Transformation =====
+print('Skewness before log:', df['Study_Hours_per_Week'].skew())
+
+df['Log_Study_Hours'] = np.log(df['Study_Hours_per_Week'] + 1)
+
+print('Skewness after log:', df['Log_Study_Hours'].skew())
+
+# ===== 🔹 Cell 9 : Final Clean Data =====
+print('Final dataset cleaned successfully')
+df.head()

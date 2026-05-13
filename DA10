@@ -1,0 +1,21 @@
+# ===== 🔹 Cell 1 : Imports & Load Dataset =====
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load dataset (inbuilt in seaborn)
+iris = sns.load_dataset('iris')
+
+# Display first 5 rows
+print(iris.head())
+
+# ===== 🔹 Cell 2 : Histograms of Features =====
+iris.hist(figsize=(10, 8), bins=20)
+plt.suptitle("Histograms of Iris Features")
+plt.show()
+
+# ===== 🔹 Cell 3 : Boxplot of Features =====
+plt.figure(figsize=(10, 6))
+sns.boxplot(data=iris)
+plt.title("Boxplot of Iris Features")
+plt.show()

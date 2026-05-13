@@ -1,0 +1,50 @@
+import pandas as pd
+# ===============================
+# Part 1: Summary statistics for data.csv
+# ===============================
+print("=== PART 1: Summary statistics for data1.csv ===\n")
+# Load data.csv
+data_df = pd.read_csv('data1.csv')
+# Strip any leading/trailing spaces from column names
+data_df.columns = data_df.columns.str.strip()
+print("Columns in data.csv:", data_df.columns.tolist())
+print("\nDataset Preview:\n", data_df.head())
+# Group by categorical variable (change 'age_group' to your categorical column)
+categorical_col = 'age_group'  # update if your categorical column has a different name
+numeric_col = 'income'         # update if your numeric column has a different name
+grouped = data_df.groupby(categorical_col)
+# Summary statistics
+summary_stats = grouped[numeric_col].agg(['mean', 'median', 'min', 'max', 'std'])
+print("\nSummary statistics grouped by", categorical_col, ":\n")
+print(summary_stats)
+# Create list of numeric values for each category
+numeric_lists = grouped[numeric_col].apply(list)
+print("\nNumeric values grouped by", categorical_col, ":\n")
+print(numeric_lists)
+# ===============================
+# Part 2: Iris dataset statistics
+# ===============================
+print("\n\n=== PART 2: Iris1 dataset statistics ===\n")
+# Load iris.csv
+iris_df = pd.read_csv('iris1.csv')
+# Strip spaces from column names
+iris_df.columns = iris_df.columns.str.strip()
+# Check column names
+print("Columns in iris.csv:", iris_df.columns.tolist())
+# Group by species
+iris_grouped = iris_df.groupby('species')
+for species, group in iris_grouped:
+    print("\n==============================")
+    print("Species:", species)
+    
+    # Select numeric columns
+    data = group.select_dtypes(include=['number'])
+In [2]:
+Explore our developer-friendly HTML to PDF API Printed using PDFCrowd HTML to PDF
+# Basic statistics
+print("\nMean:\n", data.mean())
+print("\nStandard Deviation:\n", data.std())
+print("\nPercentiles (25%, 50%, 75%):\n")
+print(data.quantile([0.25, 0.5, 0.75]))
+print("\nFull Summary:\n")
+print(data.describe())

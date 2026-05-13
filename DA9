@@ -1,0 +1,20 @@
+# ===== 🔹 Cell 1 : Imports & Load Dataset =====
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+titanic = sns.load_dataset('titanic')
+
+# ===== 🔹 Cell 2 : Boxplot — Age by Gender & Survival =====
+sns.boxplot(x='sex', y='age', hue='survived', data=titanic)
+plt.title("Age Distribution by Gender and Survival")
+plt.xlabel("Gender")
+plt.ylabel("Age")
+plt.legend(title="Survived (0 = No, 1 = Yes)")
+plt.show()
+
+# ===== 🔹 Cell 3 : Key Observations (Comments) =====
+# Females had higher survival rates
+# Younger passengers had better survival chances (children survived more)
+# Male survival rate was low across all ages
+# Male passengers had wider age distribution
+# Median age of survivors is slightly lower than non-survivors
