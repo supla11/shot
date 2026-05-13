@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 # Load dataset
-data = pd.read_csv("Iris.csv")
+data = pd.read_csv("iris.csv")
 print(data.head())
 
 # Dataset information
