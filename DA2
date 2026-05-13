@@ -1,61 +1,84 @@
-# ===== 🔹 Cell 1 : Imports =====
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy import stats
+import seaborn as sns
 
-# ===== 🔹 Cell 2 : Create Dataset =====
-np.random.seed(42)
-
+# Create dataset
 data = {
-    'Student_ID': range(1, 51),
-    'Gender': np.random.choice(['Male', 'Female'], 50),
-    'Math_Score': np.clip(np.random.normal(70, 15, 50), 0, 100),
-    'Science_Score': np.clip(np.random.normal(65, 12, 50), 0, 100),
-    'English_Score': np.clip(np.random.normal(75, 10, 50), 0, 100),
-    'Attendance_Percentage': np.clip(np.random.normal(85, 8, 50), 0, 100),
-    'Study_Hours_per_Week': np.clip(np.random.normal(15, 5, 50), 0, None),
+    'Student_ID': [1,2,3,4,5,6,7,8,9,10],
+    
+    'Gender': ['Male','Female','Female','Male','Female',
+               'Male','Female','Male',None,'Female'],
+    
+    'Math_Score': [85,90,np.nan,76,95,200,88,79,84,91],
+    
+    'Science_Score': [78,85,89,92,np.nan,87,300,76,81,90],
+    
+    'Attendance': [85,90,88,92,95,30,87,91,np.nan,89]
 }
 
 df = pd.DataFrame(data)
-df.head()
 
-# ===== 🔹 Cell 3 : Introduce Missing & Wrong Values =====
-df.loc[5, 'Math_Score'] = np.nan
-df.loc[10, 'Science_Score'] = np.nan
-df.loc[15, 'Attendance_Percentage'] = np.nan
-df.loc[20, 'Gender'] = 'male'   # inconsistency
-df.loc[25, 'Math_Score'] = 200  # outlier
+print("Original Dataset")
+print(df)
 
-# ===== 🔹 Cell 4 : Check Missing Values =====
+# Missing values
+print("\nMissing Values")
 print(df.isnull().sum())
 
-# ===== 🔹 Cell 5 : Handle Missing Values =====
-df['Math_Score'] = df['Math_Score'].fillna(df['Math_Score'].mean())
-df['Science_Score'] = df['Science_Score'].fillna(df['Science_Score'].mean())
-df['Attendance_Percentage'] = df['Attendance_Percentage'].fillna(df['Attendance_Percentage'].mean())
+# Handle missing values
+df['Math_Score'].fillna(df['Math_Score'].mean(), inplace=True)
 
-# ===== 🔹 Cell 6 : Fix Categorical Inconsistency =====
-df['Gender'] = df['Gender'].str.capitalize()
+df['Science_Score'].fillna(df['Science_Score'].mean(), inplace=True)
 
-# ===== 🔹 Cell 7 : Detect Outliers using IQR =====
+df['Attendance'].fillna(df['Attendance'].mean(), inplace=True)
+
+df['Gender'].fillna(df['Gender'].mode()[0], inplace=True)
+
+# Check again
+print("\nAfter Handling Missing Values")
+print(df.isnull().sum())
+
+# Boxplot
+sns.boxplot(df['Math_Score'])
+
+plt.title("Math Score Boxplot")
+
+plt.show()
+
+# IQR method
 Q1 = df['Math_Score'].quantile(0.25)
 Q3 = df['Math_Score'].quantile(0.75)
+
 IQR = Q3 - Q1
 
-lower_bound = Q1 - 1.5 * IQR
-upper_bound = Q3 + 1.5 * IQR
+lower_limit = Q1 - 1.5 * IQR
+upper_limit = Q3 + 1.5 * IQR
 
-df['Math_Score'] = np.where(df['Math_Score'] > upper_bound, upper_bound, df['Math_Score'])
-df['Math_Score'] = np.where(df['Math_Score'] < lower_bound, lower_bound, df['Math_Score'])
+# Remove outliers
+df = df[
+    (df['Math_Score'] >= lower_limit) &
+    (df['Math_Score'] <= upper_limit)
+]
 
-# ===== 🔹 Cell 8 : Skewness & Log Transformation =====
-print('Skewness before log:', df['Study_Hours_per_Week'].skew())
+print("\nAfter Removing Outliers")
+print(df)
 
-df['Log_Study_Hours'] = np.log(df['Study_Hours_per_Week'] + 1)
+# Log transformation
+df['Log_Attendance'] = np.log(df['Attendance'] + 1)
 
-print('Skewness after log:', df['Log_Study_Hours'].skew())
+print("\nTransformed Data")
+print(df[['Attendance', 'Log_Attendance']])
 
-# ===== 🔹 Cell 9 : Final Clean Data =====
-print('Final dataset cleaned successfully')
-df.head()
+# Histograms
+plt.figure(figsize=(10,5))
+
+plt.subplot(1,2,1)
+sns.histplot(df['Attendance'], kde=True)
+plt.title("Original Attendance")
+
+plt.subplot(1,2,2)
+sns.histplot(df['Log_Attendance'], kde=True)
+plt.title("Log Transformed Attendance")
+
+plt.show()
