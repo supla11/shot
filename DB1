@@ -1,31 +1,48 @@
-// ===== 🔹 Cell 1 =====
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-// ===== 🔹 Cell 2 =====
 public class Main {
+
+    // Mapper Function
+    public static Map<String, Integer> mapper(String text) {
+
+        Map<String, Integer> wordCount = new HashMap<>();
+
+        // Convert text into words
+        String[] words = text.split("\\s+");
+
+        // Emit (word,1)
+        for (String word : words) {
+
+            word = word.toLowerCase();
+
+            wordCount.put(word,
+                    wordCount.getOrDefault(word, 0) + 1);
+        }
+
+        return wordCount;
+    }
+
+    // Reducer Function
+    public static void reducer(Map<String, Integer> result) {
+
+        System.out.println("Word Count Result:\n");
+
+        for (String word : result.keySet()) {
+            System.out.println(word + " : " + result.get(word));
+        }
+    }
+
     public static void main(String[] args) {
 
-// ===== 🔹 Cell 3 =====
-        String input = "Hello welcome to big data and big data analytics";
+        // Sample input data (acts like input file)
+        String inputData =
+                "hello hadoop hello java hello world";
 
-// ===== 🔹 Cell 4 =====
         // Map Phase
-        String[] words = input.split("\\s+");
-        HashMap<String, Integer> map = new HashMap<>();
+        Map<String, Integer> mappedData = mapper(inputData);
 
-// ===== 🔹 Cell 5 =====
-        for (String word : words) {
-            word = word.toLowerCase();
-            map.put(word, map.getOrDefault(word, 0) + 1);
-        }
-
-// ===== 🔹 Cell 6 =====
-        // Reduce Phase (printing result)
-        System.out.println("Word Count:");
-        for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            System.out.println(entry.getKey() + " -> " + entry.getValue());
-        }
-
-// ===== 🔹 Cell 7 =====
+        // Reduce Phase
+        reducer(mappedData);
     }
 }
