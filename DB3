@@ -1,44 +1,39 @@
-// ===== 🔹 Cell 1 : Imports =====
-import java.io.*;
+public class WeatherAverage {
 
-// ===== 🔹 Cell 2 : Main Class =====
-public class WeatherAnalysis {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
-// ===== 🔹 Cell 3 : Input CSV Data =====
         String data =
-            "Date,Temperature,DewPoint,WindSpeed\n" +
-            "2026-04-01,32.5,18.2,12.3\n" +
-            "2026-04-02,34.1,19.0,10.5\n" +
-            "2026-04-03,31.8,17.5,14.2\n" +
-            "2026-04-04,33.0,18.8,11.0\n" +
-            "2026-04-05,35.2,20.1,9.8";
+                "2026-05-01,32,24,12\n" +
+                "2026-05-02,34,25,10\n" +
+                "2026-05-03,31,23,14\n" +
+                "2026-05-04,30,22,11\n" +
+                "2026-05-05,33,24,13";
 
-// ===== 🔹 Cell 4 : Reader & Variables =====
-        BufferedReader br = new BufferedReader(new StringReader(data));
-        double totalTemp = 0, totalDew = 0, totalWind = 0;
+        String[] lines = data.split("\n");
+
+        double tempSum = 0;
+        double dewSum = 0;
+        double windSum = 0;
+
         int count = 0;
-        String line;
 
-// ===== 🔹 Cell 5 : Skip Header =====
-        br.readLine();
+        for (String line : lines) {
 
-// ===== 🔹 Cell 6 : Processing Loop =====
-        while ((line = br.readLine()) != null) {
             String[] values = line.split(",");
-            double temp = Double.parseDouble(values[1]);
-            double dew = Double.parseDouble(values[2]);
-            double wind = Double.parseDouble(values[3]);
 
-            totalTemp += temp;
-            totalDew += dew;
-            totalWind += wind;
+            double temperature = Double.parseDouble(values[1]);
+            double dewPoint = Double.parseDouble(values[2]);
+            double windSpeed = Double.parseDouble(values[3]);
+
+            tempSum += temperature;
+            dewSum += dewPoint;
+            windSum += windSpeed;
+
             count++;
         }
 
-// ===== 🔹 Cell 7 : Output Results =====
-        System.out.println("Average Temperature: " + (totalTemp / count));
-        System.out.println("Average Dew Point: " + (totalDew / count));
-        System.out.println("Average Wind Speed: " + (totalWind / count));
+        System.out.println("Average Temperature : " + (tempSum / count));
+        System.out.println("Average Dew Point   : " + (dewSum / count));
+        System.out.println("Average Wind Speed  : " + (windSum / count));
     }
 }
