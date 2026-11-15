@@ -1,0 +1,109 @@
+# Email Spam Detection using KNN and SVM
+
+# 1. Import Libraries
+import pandas as pd
+import numpy as np
+
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+
+from sklearn.metrics import (
+    confusion_matrix,
+    accuracy_score,
+    precision_score,
+    recall_score,
+    classification_report
+)
+
+# 2. Load Dataset
+df = pd.read_csv(r"C:\Users\Satish\Downloads\email.csv", encoding='latin-1')
+
+print("Dataset:")
+print(df.head())
+
+# 3. Remove Unnecessary Column
+df = df.drop('Email No.', axis=1)
+
+# 4. Separate Input and Output
+X = df.drop('Prediction', axis=1)
+y = df['Prediction']
+
+# 5. Split Dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+# 6. K-Nearest Neighbors (KNN)
+knn = KNeighborsClassifier(n_neighbors=5)
+
+knn.fit(X_train, y_train)
+
+y_pred_knn = knn.predict(X_test)
+
+print("\n========== KNN RESULTS ==========")
+
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred_knn))
+
+print("Accuracy:", accuracy_score(y_test, y_pred_knn))
+print("Error Rate:", 1 - accuracy_score(y_test, y_pred_knn))
+print("Precision:", precision_score(y_test, y_pred_knn, zero_division=0))
+print("Recall:", recall_score(y_test, y_pred_knn, zero_division=0))
+
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred_knn, zero_division=0))
+
+# 7. Support Vector Machine (SVM)
+svm = SVC(kernel='linear')
+
+svm.fit(X_train, y_train)
+
+y_pred_svm = svm.predict(X_test)
+
+print("\n========== SVM RESULTS ==========")
+
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred_svm))
+
+print("Accuracy:", accuracy_score(y_test, y_pred_svm))
+print("Error Rate:", 1 - accuracy_score(y_test, y_pred_svm))
+print("Precision:", precision_score(y_test, y_pred_svm, zero_division=0))
+print("Recall:", recall_score(y_test, y_pred_svm, zero_division=0))
+
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred_svm, zero_division=0))
+
+# 8. Performance Comparison
+results = pd.DataFrame({
+    'Algorithm': ['KNN', 'SVM'],
+    'Accuracy': [
+        accuracy_score(y_test, y_pred_knn),
+        accuracy_score(y_test, y_pred_svm)
+    ],
+    'Error Rate': [
+        1 - accuracy_score(y_test, y_pred_knn),
+        1 - accuracy_score(y_test, y_pred_svm)
+    ],
+    'Precision': [
+        precision_score(y_test, y_pred_knn, zero_division=0),
+        precision_score(y_test, y_pred_svm, zero_division=0)
+    ],
+    'Recall': [
+        recall_score(y_test, y_pred_knn, zero_division=0),
+        recall_score(y_test, y_pred_svm, zero_division=0)
+    ]
+})
+
+print("\n========== PERFORMANCE COMPARISON ==========")
+print(results)
+
+# 9. Final Result
+if accuracy_score(y_test, y_pred_svm) > accuracy_score(y_test, y_pred_knn):
+    print("\nSVM performs better than KNN.")
+
+elif accuracy_score(y_test, y_pred_svm) < accuracy_score(y_test, y_pred_knn):
+    print("\nKNN performs better than SVM.")
+
+else:
+    print("\nBoth algorithms have equal accuracy.")

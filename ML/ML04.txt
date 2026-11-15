@@ -1,0 +1,54 @@
+# K-Nearest Neighbors (KNN) on Diabetes Dataset
+
+# 1. Import Libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score
+
+# 2. Load Dataset
+df = pd.read_csv(r"C:\Users\Satish\Downloads\diabetes.csv")
+
+print("First 5 Rows of Dataset:")
+print(df.head())
+
+# 3. Separate Input and Output
+X = df.drop('Outcome', axis=1)
+y = df['Outcome']
+
+# 4. Split Dataset into Training and Testing
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# 5. Feature Scaling
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# 6. Apply KNN Algorithm
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train, y_train)
+
+# 7. Predict Results
+y_pred = knn.predict(X_test)
+
+# 8. Calculate Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+
+print("\nConfusion Matrix:")
+print(cm)
+
+# 9. Calculate Performance Metrics
+accuracy = accuracy_score(y_test, y_pred)
+error_rate = 1 - accuracy
+precision = precision_score(y_test, y_pred, zero_division=0)
+recall = recall_score(y_test, y_pred, zero_division=0)
+
+# 10. Display Results
+print("\nPerformance Metrics:")
+print("Accuracy:", accuracy)
+print("Error Rate:", error_rate)
+print("Precision:", precision)
+print("Recall:", recall)
