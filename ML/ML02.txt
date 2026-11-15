@@ -17,7 +17,7 @@ from sklearn.metrics import (
 )
 
 # 2. Load Dataset
-df = pd.read_csv(r"C:\Users\Satish\Downloads\email.csv", encoding='latin-1')
+df = pd.read_csv(r"email.csv", encoding='latin-1')
 
 print("Dataset:")
 print(df.head())
