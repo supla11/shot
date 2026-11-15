@@ -8,7 +8,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score
 
 # 2. Load Dataset
-df = pd.read_csv(r"C:\Users\Satish\Downloads\diabetes.csv")
+df = pd.read_csv(r"diabetes.csv")
 
 print("First 5 Rows of Dataset:")
 print(df.head())
