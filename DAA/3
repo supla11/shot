@@ -1,0 +1,41 @@
+
+# Fractional Knapsack using Greedy Method
+
+def fractional_knapsack(capacity, items):
+
+    # Sort items according to value/weight ratio
+    items.sort(key=lambda x: x[1] / x[0], reverse=True)
+
+    total_value = 0
+
+    for weight, value in items:
+
+        if capacity == 0:
+            break
+
+        if weight <= capacity:
+            capacity -= weight
+            total_value += value
+
+        else:
+            fraction = capacity / weight
+            total_value += value * fraction
+            capacity = 0
+
+    return total_value
+
+
+n = int(input("Enter number of items: "))
+
+items = []
+
+for i in range(n):
+    weight = int(input("Enter weight: "))
+    value = int(input("Enter value: "))
+    items.append((weight, value))
+
+capacity = int(input("Enter knapsack capacity: "))
+
+result = fractional_knapsack(capacity, items)
+
+print("Maximum value we can obtain =", result)

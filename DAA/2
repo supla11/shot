@@ -1,0 +1,57 @@
+
+# Huffman Encoding using Greedy Method
+
+import heapq
+from collections import Counter
+
+def huffman_encoding(text):
+    if not text:
+        return {}, ""
+
+    freq = Counter(text)
+    heap = []
+    counter = 0
+
+    for char, frequency in sorted(freq.items()):
+        heapq.heappush(heap, (frequency, counter, char))
+        counter += 1
+
+    while len(heap) > 1:
+        f1, _, left = heapq.heappop(heap)
+        f2, _, right = heapq.heappop(heap)
+
+        node = (left, right)
+
+        heapq.heappush(
+            heap, (f1 + f2, counter, node)
+        )
+        counter += 1
+
+    root = heap[0][2]
+    codes = {}
+
+    def generate_codes(node, code):
+        if isinstance(node, str):
+            codes[node] = code if code else "0"
+            return
+
+        generate_codes(node[0], code + "0")
+        generate_codes(node[1], code + "1")
+
+    generate_codes(root, "")
+
+    encoded = "".join(codes[ch] for ch in text)
+
+    return codes, encoded
+
+
+text = input("Enter a string: ")
+
+codes, encoded = huffman_encoding(text)
+
+print("Huffman Codes:")
+
+for char, code in sorted(codes.items()):
+    print(char, ":", code)
+
+print("Encoded String:", encoded)
