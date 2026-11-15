@@ -10,7 +10,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
 # 2. Load Dataset
-df = pd.read_csv(r"C:\Users\Satish\Downloads\ubers.csv")
+df = pd.read_csv(r"ubers.csv")
 
 print("Dataset:")
 print(df.head())
