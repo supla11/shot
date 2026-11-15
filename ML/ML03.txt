@@ -8,7 +8,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
 
 # 2. Load Dataset
-df = pd.read_csv(r"C:\Users\Satish\Downloads\Churn_Modelling.csv")
+df = pd.read_csv(r"Churn_Modelling.csv")
 
 print("First 5 Rows:")
 print(df.head())
